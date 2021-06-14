@@ -1,4 +1,7 @@
 <?php
+
+namespace Horde;
+
 /**
  * The Horde_Util:: class provides generally useful methods.
  *
@@ -13,7 +16,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Util
  */
-class Horde_Util
+class Util
 {
     /**
      * A list of random patterns to use for overwriting purposes.
@@ -22,45 +25,45 @@ class Horde_Util
      *
      * @var array
      */
-    static public $patterns = array(
+    public static $patterns = [
         "\x55", "\xaa", "\x92\x49\x24", "\x49\x24\x92", "\x24\x92\x49",
         "\x00", "\x11", "\x22", "\x33", "\x44", "\x55", "\x66", "\x77",
         "\x88", "\x99", "\xaa", "\xbb", "\xcc", "\xdd", "\xee", "\xff",
         "\x92\x49\x24", "\x49\x24\x92", "\x24\x92\x49", "\x6d\xb6\xdb",
         "\xb6\xdb\x6d", "\xdb\x6d\xb6"
-    );
+    ];
 
     /**
      * Are magic quotes in use?
      *
-     * @var boolean
+     * @var bool
      */
-    static protected $_magicquotes = null;
+    protected static $_magicquotes = null;
 
     /**
      * TODO
      *
      * @var array
      */
-    static protected $_shutdowndata = array(
-        'dirs' => array(),
-        'files' => array(),
-        'secure' => array()
-    );
+    protected static $_shutdowndata = [
+        'dirs' => [],
+        'files' => [],
+        'secure' => []
+    ];
 
     /**
      * Has the shutdown method been registered?
      *
-     * @var boolean
+     * @var bool
      */
-    static protected $_shutdownreg = false;
+    protected static $_shutdownreg = false;
 
     /**
      * Cache for extensionExists().
      *
      * @var array
      */
-    static protected $_cache = array();
+    protected static $_cache = [];
 
     /**
      * Checks to see if a value has been set by the script and not by GET,
@@ -74,7 +77,7 @@ class Horde_Util
      * @return mixed  $default if the var is in user input or not present,
      *                the variable value otherwise.
      */
-    static public function nonInputVar($varname, $default = null)
+    public static function nonInputVar($varname, $default = null)
     {
         return (isset($_GET[$varname]) || isset($_POST[$varname]) || isset($_COOKIE[$varname]))
             ? $default
@@ -84,11 +87,11 @@ class Horde_Util
     /**
      * Returns a hidden form input containing the session name and id.
      *
-     * @param boolean $append_session  0 = only if needed, 1 = always.
+     * @param bool $append_session  0 = only if needed, 1 = always.
      *
      * @return string  The hidden form input, if needed/requested.
      */
-    static public function formInput($append_session = 0)
+    public static function formInput($append_session = 0)
     {
         return (($append_session == 1) || !isset($_COOKIE[session_name()]))
             ? '<input type="hidden" name="' . htmlspecialchars(session_name()) . '" value="' . htmlspecialchars(session_id()) . "\" />\n"
@@ -98,32 +101,24 @@ class Horde_Util
     /**
      * Prints a hidden form input containing the session name and id.
      *
-     * @param boolean $append_session  0 = only if needed, 1 = always.
+     * @param bool $append_session  0 = only if needed, 1 = always.
      */
-    static public function pformInput($append_session = 0)
+    public static function pformInput($append_session = 0)
     {
         echo self::formInput($append_session);
     }
 
     /**
+     * @deprecated magic_quotes_gpc() removed in PHP 8.0
+     *
      * If magic_quotes_gpc is in use, run stripslashes() on $var.
      *
      * @param mixed $var  The string, or an array of strings, to un-quote.
      *
      * @return mixed  $var, minus any magic quotes.
      */
-    static public function dispelMagicQuotes($var)
+    public static function dispelMagicQuotes($var)
     {
-        if (is_null(self::$_magicquotes)) {
-            self::$_magicquotes = get_magic_quotes_gpc();
-        }
-
-        if (self::$_magicquotes) {
-            $var = is_array($var)
-                ? array_map(array(__CLASS__, 'dispelMagicQuotes'), $var)
-                : stripslashes($var);
-        }
-
         return $var;
     }
 
@@ -139,7 +134,7 @@ class Horde_Util
      *
      * @return string  The cleaned form variable, or $default.
      */
-    static public function getFormData($var, $default = null)
+    public static function getFormData($var, $default = null)
     {
         return (($val = self::getPost($var)) !== null)
             ? $val
@@ -156,7 +151,7 @@ class Horde_Util
      *
      * @return string  The cleaned form variable, or $default.
      */
-    static public function getGet($var, $default = null)
+    public static function getGet($var, $default = null)
     {
         return (isset($_GET[$var]))
             ? self::dispelMagicQuotes($_GET[$var])
@@ -173,7 +168,7 @@ class Horde_Util
      *
      * @return string  The cleaned form variable, or $default.
      */
-    static public function getPost($var, $default = null)
+    public static function getPost($var, $default = null)
     {
         return (isset($_POST[$var]))
             ? self::dispelMagicQuotes($_POST[$var])
@@ -186,16 +181,20 @@ class Horde_Util
      *
      * @param string $prefix   Prefix to make the temporary name more
      *                         recognizable.
-     * @param boolean $delete  Delete the file at the end of the request?
+     * @param bool $delete  Delete the file at the end of the request?
      * @param string $dir      Directory to create the temporary file in.
-     * @param boolean $secure  If deleting the file, should we securely delete
+     * @param bool $secure  If deleting the file, should we securely delete
      *                         the file by overwriting it with random data?
      *
      * @return string   Returns the full path-name to the temporary file.
      *                  Returns false if a temp file could not be created.
      */
-    static public function getTempFile($prefix = '', $delete = true, $dir = '',
-                                       $secure = false)
+    public static function getTempFile(
+        $prefix = '',
+        $delete = true,
+        $dir = '',
+        $secure = false
+    )
     {
         $tempDir = (empty($dir) || !is_dir($dir))
             ? sys_get_temp_dir()
@@ -223,18 +222,21 @@ class Horde_Util
      * @param string $extension  The file extension to use.
      * @param string $prefix     Prefix to make the temporary name more
      *                           recognizable.
-     * @param boolean $delete    Delete the file at the end of the request?
+     * @param bool $delete    Delete the file at the end of the request?
      * @param string $dir        Directory to create the temporary file in.
-     * @param boolean $secure    If deleting file, should we securely delete
+     * @param bool $secure    If deleting file, should we securely delete
      *                           the file by overwriting it with random data?
      *
      * @return string   Returns the full path-name to the temporary file.
      *                  Returns false if a temporary file could not be created.
      */
-    static public function getTempFileWithExtension($extension = '.tmp',
-                                                    $prefix = '',
-                                                    $delete = true, $dir = '',
-                                                    $secure = false)
+    public static function getTempFileWithExtension(
+        $extension = '.tmp',
+        $prefix = '',
+        $delete = true,
+        $dir = '',
+        $secure = false
+    )
     {
         $tempDir = (empty($dir) || !is_dir($dir))
             ? sys_get_temp_dir()
@@ -284,7 +286,7 @@ class Horde_Util
     /**
      * Creates a temporary directory in the system's temporary directory.
      *
-     * @param boolean $delete   Delete the temporary directory at the end of
+     * @param bool $delete   Delete the temporary directory at the end of
      *                          the request?
      * @param string $temp_dir  Use this temporary directory as the directory
      *                          where the temporary directory will be created.
@@ -292,7 +294,7 @@ class Horde_Util
      * @return string  The pathname to the new temporary directory.
      *                 Returns false if directory not created.
      */
-    static public function createTempDir($delete = true, $temp_dir = null)
+    public static function createTempDir($delete = true, $temp_dir = null)
     {
         if (is_null($temp_dir)) {
             $temp_dir = sys_get_temp_dir();
@@ -330,7 +332,7 @@ class Horde_Util
      *
      * @return string  The canonicalized file path.
      */
-    static public function realPath($path)
+    public static function realPath($path)
     {
         /* Standardize on UNIX directory separators. */
         if (!strncasecmp(PHP_OS, 'WIN', 3)) {
@@ -339,7 +341,7 @@ class Horde_Util
 
         /* xx////xx -> xx/xx
          * xx/././xx -> xx/xx */
-        $path = preg_replace(array("|/+|", "@(/\.)+(/|\Z(?!\n))@"), array('/', '/'), $path);
+        $path = preg_replace(["|/+|", "@(/\.)+(/|\Z(?!\n))@"], ['/', '/'], $path);
 
         /* ./xx -> xx */
         if ($path != './') {
@@ -355,7 +357,7 @@ class Horde_Util
         }
 
         /* /xx/.. -> / */
-        while (strpos($path, '/..') !== false) {
+        while (str_contains($path, '/..')) {
             $path = preg_replace("|/[^/]+/\.\.|", '', $path);
         }
 
@@ -381,17 +383,20 @@ class Horde_Util
      *
      * @param string $filename   The filename to be deleted at the end of the
      *                           request.
-     * @param boolean $register  If true, then register the element for
+     * @param bool $register  If true, then register the element for
      *                           deletion, otherwise, unregister it.
-     * @param boolean $secure    If deleting file, should we securely delete
+     * @param bool $secure    If deleting file, should we securely delete
      *                           the file?
      */
-    static public function deleteAtShutdown($filename, $register = true,
-                                            $secure = false)
+    public static function deleteAtShutdown(
+        $filename,
+        $register = true,
+        $secure = false
+    )
     {
         /* Initialization of variables and shutdown functions. */
         if (!self::$_shutdownreg) {
-            register_shutdown_function(array(__CLASS__, 'shutdown'));
+            register_shutdown_function([__CLASS__, 'shutdown']);
             self::$_shutdownreg = true;
         }
 
@@ -421,7 +426,7 @@ class Horde_Util
      * Contains code from gpg_functions.php.
      * Copyright 2002-2003 Braverock Ventures
      */
-    static public function shutdown()
+    public static function shutdown()
     {
         $ptr = &self::$_shutdowndata;
 
@@ -465,9 +470,9 @@ class Horde_Util
      *
      * @param string $ext  The extension name.
      *
-     * @return boolean  Is the extension loaded?
+     * @return bool  Is the extension loaded?
      */
-    static public function extensionExists($ext)
+    public static function extensionExists($ext)
     {
         if (!isset(self::$_cache[$ext])) {
             self::$_cache[$ext] = extension_loaded($ext);
@@ -482,11 +487,11 @@ class Horde_Util
      *
      * @param string $ext  The extension to load.
      *
-     * @return boolean  True if the extension is now loaded, false if not.
+     * @return bool  True if the extension is now loaded, false if not.
      *                  True can mean that the extension was already loaded,
      *                  OR was loaded dynamically.
      */
-    static public function loadExtension($ext)
+    public static function loadExtension($ext)
     {
         /* If $ext is already loaded, our work is done. */
         if (self::extensionExists($ext)) {
@@ -530,18 +535,18 @@ class Horde_Util
      *
      * @return string  The PATH_INFO string.
      */
-    static public function getPathInfo()
+    public static function getPathInfo()
     {
         if (isset($_SERVER['PATH_INFO']) &&
-            (strpos($_SERVER['SERVER_SOFTWARE'], 'lighttpd') === false)) {
+            (!str_contains($_SERVER['SERVER_SOFTWARE'], 'lighttpd'))) {
             return $_SERVER['PATH_INFO'];
         } elseif (isset($_SERVER['REQUEST_URI']) &&
                   isset($_SERVER['SCRIPT_NAME'])) {
-            $search = Horde_String::common($_SERVER['SCRIPT_NAME'], $_SERVER['REQUEST_URI']);
+            $search = HordeString::common($_SERVER['SCRIPT_NAME'], $_SERVER['REQUEST_URI']);
             if (substr($search, -1) == '/') {
                 $search = substr($search, 0, -1);
             }
-            $search = array($search);
+            $search = [$search];
             if (!empty($_SERVER['QUERY_STRING'])) {
                 // We can't use QUERY_STRING directly because URL rewriting
                 // might add more parameters to the query string than those
@@ -560,5 +565,4 @@ class Horde_Util
 
         return '';
     }
-
 }
