@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Text\Diff\Renderer;
+
+use Horde\Text\Diff\Renderer;
+
 /**
  * "Unified" diff renderer.
  *
@@ -12,7 +17,7 @@
  * @author  Ciprian Popovici
  * @package Text_Diff
  */
-class Horde_Text_Diff_Renderer_Unified extends Horde_Text_Diff_Renderer
+class Unified extends Renderer
 {
     /**
      * Number of leading context "lines" to preserve.

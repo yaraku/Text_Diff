@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde;
+
+use Exception;
+
 /**
  * Horde base exception class.
  *
@@ -11,7 +16,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL-2.1
  * @package  Exception
  */
-class Horde_Exception extends Exception
+class HordeException extends Exception
 {
     /**
      * Error details that should not be part of the main exception message,
@@ -24,21 +29,21 @@ class Horde_Exception extends Exception
     /**
      * Has this exception been logged?
      *
-     * @var boolean
+     * @var bool
      */
     public $logged = false;
 
     /**
      * The log level to use. A Horde_Log constant.
      *
-     * @var integer
+     * @var int
      */
     protected $_logLevel = 0;
 
     /**
      * Get the log level.
      *
-     * @return integer  The Horde_Log constant for the log level.
+     * @return int  The Horde_Log constant for the log level.
      */
     public function getLogLevel()
     {
@@ -60,5 +65,4 @@ class Horde_Exception extends Exception
 
         $this->_logLevel = $level;
     }
-
 }

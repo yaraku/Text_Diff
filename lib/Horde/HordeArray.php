@@ -1,6 +1,11 @@
 <?php
+
+namespace Horde;
+
+use Horde\Array\Sort\Helper;
+
 /**
- * The Horde_Array:: class provides various methods for array manipulation.
+ * The HordeArray:: class provides various methods for array manipulation.
  *
  * Copyright 2003-2013 Horde LLC (http://www.horde.org/)
  *
@@ -14,7 +19,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Util
  */
-class Horde_Array
+class HordeArray
 {
     /**
      * Sorts an array on a specified key. If the key does not exist,
@@ -23,13 +28,17 @@ class Horde_Array
      * @param array &$array   The array to be sorted, passed by reference.
      * @param string $key     The key by which to sort. If not specified then
      *                        the first key is used.
-     * @param integer $dir    Sort direction:
+     * @param int $dir    Sort direction:
      *                          0 = ascending (default)
      *                          1 = descending
-     * @param boolean $assoc  Keep key value association?
+     * @param bool $assoc  Keep key value association?
      */
-    static public function arraySort(array &$array, $key = null, $dir = 0,
-                                     $assoc = true)
+    public static function arraySort(
+        array &$array,
+        $key = null,
+        $dir = 0,
+        $assoc = true
+    )
     {
         /* Return if the array is empty. */
         if (empty($array)) {
@@ -44,13 +53,13 @@ class Horde_Array
         }
 
         /* Call the appropriate sort function. */
-        $helper = new Horde_Array_Sort_Helper();
+        $helper = new Helper();
         $helper->key = $key;
         $function = $dir ? 'reverseCompare' : 'compare';
         if ($assoc) {
-            uasort($array, array($helper, $function));
+            uasort($array, [$helper, $function]);
         } else {
-            usort($array, array($helper, $function));
+            usort($array, [$helper, $function]);
         }
     }
 
@@ -62,9 +71,9 @@ class Horde_Array
      * @param string &$base  Will be set to the base element.
      * @param array &$keys   Will be set to the list of keys.
      *
-     * @return boolean  True on sucess, false on error.
+     * @return bool  True on sucess, false on error.
      */
-    static public function getArrayParts($field, &$base, &$keys)
+    public static function getArrayParts($field, &$base, &$keys)
     {
         if (!preg_match('|([^\[]*)((\[[^\[\]]*\])+)|', $field, $matches)) {
             return false;
@@ -73,7 +82,7 @@ class Horde_Array
         $base = $matches[1];
         $keys = explode('][', $matches[2]);
         $keys[0] = substr($keys[0], 1);
-        $keys[count($keys) - 1] = substr($keys[count($keys) - 1], 0, strlen($keys[count($keys) - 1]) - 1);
+        $keys[count($keys) - 1] = substr($keys[count($keys) - 1], 0, -1);
         return true;
     }
 
@@ -89,7 +98,7 @@ class Horde_Array
      *
      * @return mixed  The final value of the key path.
      */
-    static public function getElement(&$array, array &$keys, $value = null)
+    public static function getElement(&$array, array &$keys, $value = null)
     {
         if (count($keys)) {
             $key = array_shift($keys);
@@ -109,17 +118,22 @@ class Horde_Array
      * Returns a rectangle of a two-dimensional array.
      *
      * @param array   $array   The array to extract the rectangle from.
-     * @param integer $row     The start row of the rectangle.
-     * @param integer $col     The start column of the rectangle.
-     * @param integer $height  The height of the rectangle.
-     * @param integer $width   The width of the rectangle.
+     * @param int $row     The start row of the rectangle.
+     * @param int $col     The start column of the rectangle.
+     * @param int $height  The height of the rectangle.
+     * @param int $width   The width of the rectangle.
      *
      * @return array  The extracted rectangle.
      */
-    static public function getRectangle(array $array, $row, $col, $height,
-                                        $width)
+    public static function getRectangle(
+        array $array,
+        $row,
+        $col,
+        $height,
+        $width
+    )
     {
-        $rec = array();
+        $rec = [];
         for ($y = $row; $y < $row + $height; $y++) {
             $rec[] = array_slice($array[$y], $col, $width);
         }
@@ -138,10 +152,10 @@ class Horde_Array
      *
      * @return array  An array with keys the same as values.
      */
-    static public function valuesToKeys(array $array)
+    public static function valuesToKeys(array $array)
     {
         return $array
             ? array_combine($array, $array)
-            : array();
+            : [];
     }
 }

@@ -1,4 +1,10 @@
 <?php
+
+namespace Horde\Exception;
+
+use Exception;
+use Horde\HordeException;
+
 /**
  * Horde exception class that can wrap and set its details from PEAR_Error,
  * Exception, and other objects with similar interfaces.
@@ -11,7 +17,7 @@
  * @category Horde
  * @package  Exception
  */
-class Horde_Exception_Wrapped extends Horde_Exception
+class WrappedException extends HordeException
 {
     /**
      * Exception constructor.

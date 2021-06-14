@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Text\Diff\Renderer;
+
+use Horde\Text\Diff\Renderer;
+
 /**
  * "Context" diff renderer.
  *
@@ -11,7 +16,7 @@
  *
  * @package Text_Diff
  */
-class Horde_Text_Diff_Renderer_Context extends Horde_Text_Diff_Renderer
+class Context extends Renderer
 {
     /**
      * Number of leading context "lines" to preserve.
@@ -67,5 +72,4 @@ class Horde_Text_Diff_Renderer_Context extends Horde_Text_Diff_Renderer
         $this->_second_block .= $this->_lines($final, '! ');
         return $this->_lines($orig, '! ');
     }
-
 }

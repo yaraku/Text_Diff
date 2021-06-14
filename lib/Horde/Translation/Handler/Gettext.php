@@ -1,4 +1,10 @@
 <?php
+
+namespace Horde\Translation\Handler;
+
+use Horde\Translation\Handler;
+use InvalidArgumentException;
+
 /**
  * @package Translation
  *
@@ -15,7 +21,7 @@
  * @author  Jan Schneider <jan@horde.org>
  * @package Translation
  */
-class Horde_Translation_Handler_Gettext implements Horde_Translation_Handler
+class Gettext implements Handler
 {
     /**
      * The translation domain, e.g. package name.
@@ -27,7 +33,7 @@ class Horde_Translation_Handler_Gettext implements Horde_Translation_Handler
     /**
      * Whether the gettext extension is installed.
      *
-     * @var boolean
+     * @var bool
      */
     protected $_gettext;
 
@@ -40,7 +46,7 @@ class Horde_Translation_Handler_Gettext implements Horde_Translation_Handler
     public function __construct($domain, $path)
     {
         if (!is_dir($path)) {
-            throw new InvalidArgumentException("$path is not a directory");
+            throw new InvalidArgumentException("{$path} is not a directory");
         }
         $this->_gettext = function_exists('_');
         if (!$this->_gettext) {
@@ -68,7 +74,7 @@ class Horde_Translation_Handler_Gettext implements Horde_Translation_Handler
      *
      * @param string $singular  The singular version to translate.
      * @param string $plural    The plural version to translate.
-     * @param integer $number   The number that determines singular vs. plural.
+     * @param int $number   The number that determines singular vs. plural.
      *
      * @return string  The string translation, or the original string if no
      *                 translation exists.

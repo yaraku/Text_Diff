@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Text\Diff;
+
+use Horde\Exception\WrappedException;
+
 /**
  * Exception handler for the Text_Diff package.
  *
@@ -12,6 +17,6 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Text_Diff
  */
-class Horde_Text_Diff_Exception extends Horde_Exception_Wrapped
+class DiffException extends WrappedException
 {
 }

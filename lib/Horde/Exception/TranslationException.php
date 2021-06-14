@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Exception;
+
+use Horde\HordeTranslation;
+
 /**
  * @package Exception
  *
@@ -9,12 +14,12 @@
  */
 
 /**
- * Horde_Exception_Translation is the translation wrapper class for Horde_Exception.
+ * Horde_Exception_Translation is the translation wrapper class for HordeException.
  *
  * @author  Jan Schneider <jan@horde.org>
  * @package Exception
  */
-class Horde_Exception_Translation extends Horde_Translation
+class TranslationException extends HordeTranslation
 {
     /**
      * Returns the translation of a message.
@@ -24,9 +29,9 @@ class Horde_Exception_Translation extends Horde_Translation
      * @return string  The string translation, or the original string if no
      *                 translation exists.
      */
-    static public function t($message)
+    public static function t($message)
     {
-        self::$_domain = 'Horde_Exception';
+        self::$_domain = 'HordeException';
         self::$_directory = '/app/vendor/pear-pear.horde.org/Horde_Exception/data' == '@'.'data_dir'.'@' ? __DIR__ . '/../../../locale' : '/app/vendor/pear-pear.horde.org/Horde_Exception/data/Horde_Exception/locale';
         return parent::t($message);
     }
@@ -36,12 +41,12 @@ class Horde_Exception_Translation extends Horde_Translation
      *
      * @param string $singular  The singular version to translate.
      * @param string $plural    The plural version to translate.
-     * @param integer $number   The number that determines singular vs. plural.
+     * @param int $number   The number that determines singular vs. plural.
      *
      * @return string  The string translation, or the original string if no
      *                 translation exists.
      */
-    static public function ngettext($singular, $plural, $number)
+    public static function ngettext($singular, $plural, $number)
     {
         self::$_domain = 'Horde_Exception';
         self::$_directory = '/app/vendor/pear-pear.horde.org/Horde_Exception/data' == '@'.'data_dir'.'@' ? __DIR__ . '/../../../locale' : '/app/vendor/pear-pear.horde.org/Horde_Exception/data/Horde_Exception/locale';

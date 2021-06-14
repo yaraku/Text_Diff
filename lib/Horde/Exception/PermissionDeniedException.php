@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Exception;
+
+use Horde\HordeException;
+
 /**
  * Exception thrown if any access without sufficient permissions occured.
  *
@@ -10,21 +15,21 @@
  * @category Horde
  * @package  Exception
  */
-class Horde_Exception_PermissionDenied extends Horde_Exception
+class PermissionDeniedException extends HordeException
 {
     /**
      * Constructor.
      *
-     * @see Horde_Exception::__construct()
+     * @see TranslationException::__construct()
      *
      * @param mixed $message           The exception message, a PEAR_Error
      *                                 object, or an Exception object.
-     * @param integer $code            A numeric error code.
+     * @param int $code            A numeric error code.
      */
     public function __construct($message = null, $code = null)
     {
         if (is_null($message)) {
-            $message = Horde_Exception_Translation::t("Permission Denied");
+            $message = TranslationException::t("Permission Denied");
         }
         parent::__construct($message, $code);
     }

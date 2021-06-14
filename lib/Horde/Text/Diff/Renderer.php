@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Text\Diff;
+
+use Horde\Text\Diff;
+
 /**
  * A class to render Diffs in different formats.
  *
@@ -12,7 +17,7 @@
  *
  * @package Text_Diff
  */
-class Horde_Text_Diff_Renderer
+class Renderer
 {
     /**
      * Number of leading context "lines" to preserve.
@@ -60,7 +65,7 @@ class Horde_Text_Diff_Renderer
         return $params;
     }
 
-    public function render(Horde_Text_Diff $diff): string
+    public function render(Diff $diff): string
     {
         $xi = $yi = 1;
         $block = false;
@@ -76,7 +81,7 @@ class Horde_Text_Diff_Renderer
             /* If these are unchanged (copied) lines, and we want to keep
              * leading or trailing context lines, extract them from the copy
              * block. */
-            if ($edit instanceof Horde_Text_Diff_Op_Copy) {
+            if ($edit instanceof Diff\Op\Copy) {
                 /* Do we have any diff blocks yet? */
                 if (is_array($block)) {
                     /* How many lines to keep as context from the copy
@@ -91,12 +96,16 @@ class Horde_Text_Diff_Renderer
                             /* Create a new block with as many lines as we need
                              * for the trailing context. */
                             $context = array_slice($edit->orig, 0, $ntrail);
-                            $block[] = new Horde_Text_Diff_Op_Copy($context);
+                            $block[] = new Diff\Op\Copy($context);
                         }
                         /* @todo */
-                        $output .= $this->_block($x0, $ntrail + $xi - $x0,
-                                                 $y0, $ntrail + $yi - $y0,
-                                                 $block);
+                        $output .= $this->_block(
+                            $x0,
+                            $ntrail + $xi - $x0,
+                            $y0,
+                            $ntrail + $yi - $y0,
+                            $block
+                        );
                         $block = false;
                     }
                 }
@@ -111,7 +120,7 @@ class Horde_Text_Diff_Renderer
                     $y0 = $yi - count($context);
                     $block = [];
                     if ($context) {
-                        $block[] = new Horde_Text_Diff_Op_Copy($context);
+                        $block[] = new Diff\Op\Copy($context);
                     }
                 }
                 $block[] = $edit;
@@ -126,9 +135,13 @@ class Horde_Text_Diff_Renderer
         }
 
         if (is_array($block)) {
-            $output .= $this->_block($x0, $xi - $x0,
-                                     $y0, $yi - $y0,
-                                     $block);
+            $output .= $this->_block(
+                $x0,
+                $xi - $x0,
+                $y0,
+                $yi - $y0,
+                $block
+            );
         }
 
         return $output . $this->_endDiff();
@@ -140,10 +153,10 @@ class Horde_Text_Diff_Renderer
 
         foreach ($edits as $edit) {
             $output .= match (get_class($edit)) {
-                'Horde_Text_Diff_Op_Copy' => $this->_context($edit->orig),
-                'Horde_Text_Diff_Op_Add' => $this->_added($edit->final),
-                'Horde_Text_Diff_Op_Delete' => $this->_deleted($edit->orig),
-                'Horde_Text_Diff_Op_Change' => $this->_changed($edit->orig, $edit->final),
+                Diff\Op\Copy::class => $this->_context($edit->orig),
+                Diff\Op\Add::class => $this->_added($edit->final),
+                Diff\Op\Delete::class => $this->_deleted($edit->orig),
+                Diff\Op\Change::class => $this->_changed($edit->orig, $edit->final),
             };
         }
 

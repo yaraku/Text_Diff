@@ -1,4 +1,10 @@
 <?php
+
+namespace Horde\Text\Diff\Renderer\Unified;
+
+use BadMethodCallException;
+use Horde\Text\Diff\Renderer\Unified;
+
 /**
  * Copyright 2017 Horde LLC (http://www.horde.org/)
  *
@@ -20,8 +26,7 @@
  * @license   http://www.horde.org/licenses/lgpl21 LGPL
  * @package   Text_Diff
  */
-class Horde_Text_Diff_Renderer_Unified_Colored
-extends Horde_Text_Diff_Renderer_Unified
+class Colored extends Unified
 {
     /**
      * CLI handler.
@@ -47,21 +52,24 @@ extends Horde_Text_Diff_Renderer_Unified
     protected function _blockHeader($xbeg, $xlen, $ybeg, $ylen): string
     {
         return $this->_cli->color(
-            'lightmagenta', parent::_blockHeader($xbeg, $xlen, $ybeg, $ylen)
+            'lightmagenta',
+            parent::_blockHeader($xbeg, $xlen, $ybeg, $ylen)
         );
     }
 
     protected function _added($lines): string
     {
         return $this->_cli->color(
-            'lightgreen', parent::_added($lines)
+            'lightgreen',
+            parent::_added($lines)
         );
     }
 
     protected function _deleted($lines): string
     {
         return $this->_cli->color(
-            'lightred', parent::_deleted($lines)
+            'lightred',
+            parent::_deleted($lines)
         );
     }
 }

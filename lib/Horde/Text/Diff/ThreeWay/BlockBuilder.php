@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Text\Diff\ThreeWay;
+
+use Horde\Text\Diff;
+
 /**
  * Copyright 2007-2017 Horde LLC (http://www.horde.org/)
  *
@@ -8,7 +13,7 @@
  * @package Text_Diff
  * @author  Geoffrey T. Dairiki <dairiki@dairiki.org>
  */
-class Horde_Text_Diff_ThreeWay_BlockBuilder
+class BlockBuilder
 {
     public function __construct()
     {
@@ -41,12 +46,12 @@ class Horde_Text_Diff_ThreeWay_BlockBuilder
         return !$this->orig && !$this->final1 && !$this->final2;
     }
 
-    public function finish(): bool|Horde_Text_Diff_ThreeWay_Op_Base
+    public function finish(): bool|Diff\ThreeWay\Op\Base
     {
         if ($this->isEmpty()) {
             return false;
         } else {
-            $edit = new Horde_Text_Diff_ThreeWay_Op_Base($this->orig, $this->final1, $this->final2);
+            $edit = new Diff\ThreeWay\Op\Base($this->orig, $this->final1, $this->final2);
             $this->_init();
             return $edit;
         }

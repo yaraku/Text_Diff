@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Text\Diff\Renderer;
+
+use Horde\Text\Diff;
+
 /**
  * "Inline" diff renderer.
  *
@@ -12,7 +17,7 @@
  * @author  Ciprian Popovici
  * @package Text_Diff
  */
-class Horde_Text_Diff_Renderer_Inline extends Horde_Text_Diff_Renderer
+class Inline extends Diff\Renderer
 {
     /**
      * Number of leading context "lines" to preserve.
@@ -145,22 +150,27 @@ class Horde_Text_Diff_Renderer_Inline extends Horde_Text_Diff_Renderer
         $nl = "\0";
 
         if ($this->_split_characters) {
-            $diff = new Horde_Text_Diff('native',
-                                  [preg_split('//u', str_replace("\n", $nl, $text1)),
-                                        preg_split('//u', str_replace("\n", $nl, $text2))]);
+            $diff = new Diff(
+                'native',
+                [preg_split('//u', str_replace("\n", $nl, $text1)),
+                                        preg_split('//u', str_replace("\n", $nl, $text2))]
+            );
         } else {
             /* We want to split on word boundaries, but we need to preserve
              * whitespace as well. Therefore we split on words, but include
              * all blocks of whitespace in the wordlist. */
-            $diff = new Horde_Text_Diff('native',
-                                  [$this->_splitOnWords($text1, $nl),
-                                        $this->_splitOnWords($text2, $nl)]);
+            $diff = new Diff(
+                'native',
+                [$this->_splitOnWords($text1, $nl),
+                                        $this->_splitOnWords($text2, $nl)]
+            );
         }
 
         /* Get the diff in inline format. */
-        $renderer = new Horde_Text_Diff_Renderer_Inline
-            (array_merge($this->getParams(),
-                         ['split_level' => $this->_split_characters ? 'characters' : 'words']));
+        $renderer = new self(array_merge(
+                $this->getParams(),
+                ['split_level' => $this->_split_characters ? 'characters' : 'words']
+            ));
 
         /* Run the diff and get the output. */
         return str_replace($nl, "\n", $renderer->render($diff)) . "\n";
