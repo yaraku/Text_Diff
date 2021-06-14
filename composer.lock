@@ -4,92 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "003a32fe1abb8f3754a62c1b087cc4dd",
-    "packages": [
-        {
-            "name": "pear-pear.horde.org/Horde_Exception",
-            "version": "2.0.4",
-            "dist": {
-                "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Exception-2.0.4.tgz"
-            },
-            "require": {
-                "pear-pear.horde.org/horde_translation": "<3.0.0.0",
-                "php": ">=5.3.0.0"
-            },
-            "replace": {
-                "pear-horde/horde_exception": "== 2.0.4.0"
-            },
-            "type": "pear-library",
-            "autoload": {
-                "classmap": [
-                    ""
-                ]
-            },
-            "include-path": [
-                "/"
-            ],
-            "license": [
-                "LGPL-2.1"
-            ],
-            "description": "This class provides the default exception handlers for the Horde Application Framework."
-        },
-        {
-            "name": "pear-pear.horde.org/Horde_Translation",
-            "version": "2.1.0",
-            "dist": {
-                "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Translation-2.1.0.tgz"
-            },
-            "require": {
-                "php": ">=5.3.0.0"
-            },
-            "replace": {
-                "pear-horde/horde_translation": "== 2.1.0.0"
-            },
-            "type": "pear-library",
-            "autoload": {
-                "classmap": [
-                    ""
-                ]
-            },
-            "include-path": [
-                "/"
-            ],
-            "license": [
-                "LGPL-2.1"
-            ],
-            "description": "Translation wrappers."
-        },
-        {
-            "name": "pear-pear.horde.org/Horde_Util",
-            "version": "2.3.0",
-            "dist": {
-                "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Util-2.3.0.tgz"
-            },
-            "require": {
-                "ext-dom": "*",
-                "php": ">=5.3.0.0"
-            },
-            "replace": {
-                "pear-horde/horde_util": "== 2.3.0.0"
-            },
-            "type": "pear-library",
-            "autoload": {
-                "classmap": [
-                    ""
-                ]
-            },
-            "include-path": [
-                "/"
-            ],
-            "license": [
-                "LGPL-2.1"
-            ],
-            "description": "A library that provides functionality useful for all kind of applications."
-        }
-    ],
+    "content-hash": "d9ce59ad6b3924a00b914aefd553c270",
+    "packages": [],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -1808,16 +1724,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "5.0.2",
+            "version": "5.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "a90ccbddffa067b51f574dea6eb25d5680839455"
+                "reference": "23bd5951f7ff26f12d4e3242864df3e08dec4e49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/a90ccbddffa067b51f574dea6eb25d5680839455",
-                "reference": "a90ccbddffa067b51f574dea6eb25d5680839455",
+                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/23bd5951f7ff26f12d4e3242864df3e08dec4e49",
+                "reference": "23bd5951f7ff26f12d4e3242864df3e08dec4e49",
                 "shasum": ""
             },
             "require": {
@@ -1864,7 +1780,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T15:55:19+00:00"
+            "time": "2021-06-11T13:31:12+00:00"
         },
         {
             "name": "sebastian/lines-of-code",
@@ -2470,7 +2386,11 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7 || ^8"
+        "php": "^8",
+        "ext-libxml": "*",
+        "ext-dom": "*",
+        "ext-iconv": "*",
+        "ext-mbstring": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

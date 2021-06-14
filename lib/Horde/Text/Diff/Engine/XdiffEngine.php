@@ -1,4 +1,10 @@
 <?php
+
+namespace Horde\Text\Diff\Engine;
+
+use Horde\Text\Diff\DiffException;
+use Horde\Text\Diff\Op;
+
 /**
  * Class used internally by Diff to actually compute the diffs.
  *
@@ -13,20 +19,19 @@
  * @author  Jon Parise <jon@horde.org>
  * @package Text_Diff
  */
-class Horde_Text_Diff_Engine_Xdiff
+class XdiffEngine
 {
     /**
-     * @throws Horde_Text_Diff_Exception
-     * @throws Horde_Text_Diff_Exception
+     * @throws DiffException
      */
     public function diff($from_lines, $to_lines): array
     {
         if (!extension_loaded('xdiff')) {
-            throw new Horde_Text_Diff_Exception('The xdiff extension is required for this diff engine');
+            throw new DiffException('The xdiff extension is required for this diff engine');
         }
 
-        array_walk($from_lines, ['Horde_Text_Diff', 'trimNewlines']);
-        array_walk($to_lines, ['Horde_Text_Diff', 'trimNewlines']);
+        array_walk($from_lines, ['Horde\Text\Diff', 'trimNewlines']);
+        array_walk($to_lines, ['Horde\Text\Diff', 'trimNewlines']);
 
         /* Convert the two input arrays into strings for xdiff processing. */
         $from_string = implode("\n", $from_lines);
@@ -51,15 +56,15 @@ class Horde_Text_Diff_Engine_Xdiff
             }
             switch ($line[0]) {
             case ' ':
-                $edits[] = new Horde_Text_Diff_Op_Copy([substr($line, 1)]);
+                $edits[] = new Op\Copy([substr($line, 1)]);
                 break;
 
             case '+':
-                $edits[] = new Horde_Text_Diff_Op_Add([substr($line, 1)]);
+                $edits[] = new Op\Add([substr($line, 1)]);
                 break;
 
             case '-':
-                $edits[] = new Horde_Text_Diff_Op_Delete([substr($line, 1)]);
+                $edits[] = new Op\Delete([substr($line, 1)]);
                 break;
             }
         }

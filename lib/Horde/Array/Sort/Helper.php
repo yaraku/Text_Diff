@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Array\Sort;
+
+use Horde\HordeString;
+
 /**
  * Helper class for sorting arrays on arbitrary criteria for usort/uasort.
  *
@@ -14,7 +19,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Util
  */
-class Horde_Array_Sort_Helper
+class Helper
 {
     /**
      * The array key to sort by.
@@ -29,9 +34,9 @@ class Horde_Array_Sort_Helper
      * @param array $a
      * @param array $b
      */
-    public function compare($a, $b)
+    public function compare($a, $b): int
     {
-        return strcoll(Horde_String::lower($a[$this->key], true, 'UTF-8'), Horde_String::lower($b[$this->key], true, 'UTF-8'));
+        return strcoll(HordeString::lower($a[$this->key], true, 'UTF-8'), HordeString::lower($b[$this->key], true, 'UTF-8'));
     }
 
     /**
@@ -40,12 +45,10 @@ class Horde_Array_Sort_Helper
      *
      * @param scalar $a  TODO
      * @param scalar $b  TODO
-     *
-     * @return TODO
      */
-    public function reverseCompare($a, $b)
+    public function reverseCompare($a, $b): int
     {
-        return strcoll(Horde_String::lower($b[$this->key], true, 'UTF-8'), Horde_String::lower($a[$this->key], true, 'UTF-8'));
+        return strcoll(HordeString::lower($b[$this->key], true, 'UTF-8'), HordeString::lower($a[$this->key], true, 'UTF-8'));
     }
 
     /**
@@ -53,12 +56,10 @@ class Horde_Array_Sort_Helper
      *
      * @param scalar $a  TODO
      * @param scalar $b  TODO
-     *
-     * @return TODO
      */
-    public function compareKeys($a, $b)
+    public function compareKeys($a, $b): int
     {
-        return strcoll(Horde_String::lower($a, true, 'UTF-8'), Horde_String::lower($b, true, 'UTF-8'));
+        return strcoll(HordeString::lower($a, true, 'UTF-8'), HordeString::lower($b, true, 'UTF-8'));
     }
 
     /**
@@ -66,12 +67,9 @@ class Horde_Array_Sort_Helper
      *
      * @param scalar $a  TODO
      * @param scalar $b  TODO
-     *
-     * @return TODO
      */
-    public function reverseCompareKeys($a, $b)
+    public function reverseCompareKeys($a, $b): int
     {
-        return strcoll(Horde_String::lower($b, true, 'UTF-8'), Horde_String::lower($a, true, 'UTF-8'));
+        return strcoll(HordeString::lower($b, true, 'UTF-8'), HordeString::lower($a, true, 'UTF-8'));
     }
-
 }

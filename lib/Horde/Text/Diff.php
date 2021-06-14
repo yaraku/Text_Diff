@@ -1,4 +1,10 @@
 <?php
+
+namespace Horde\Text;
+
+use Horde\HordeString;
+use Horde\Text\Diff\Op;
+
 /**
  * General API for generating and formatting diffs - the differences between
  * two sequences of strings.
@@ -15,7 +21,7 @@
  * @package Text_Diff
  * @author  Geoffrey T. Dairiki <dairiki@dairiki.org>
  */
-class Horde_Text_Diff
+class Diff
 {
     /**
      * Array of changes.
@@ -27,9 +33,9 @@ class Horde_Text_Diff
     /**
      * Computes diffs between sequences of strings.
      *
-     * @param string $engine     Name of the diffing engine to use.  'auto'
+     * @param string $engine Name of the diffing engine to use.  'auto'
      *                           will automatically select the best.
-     * @param array $params      Parameters to pass to the diffing engine.
+     * @param array $params Parameters to pass to the diffing engine.
      *                           Normally an array of two arrays, each
      *                           containing the lines from a file.
      */
@@ -38,10 +44,9 @@ class Horde_Text_Diff
         if ($engine === 'auto') {
             $engine = extension_loaded('xdiff') ? 'Xdiff' : 'Native';
         } else {
-            $engine = Horde_String::ucfirst(basename($engine));
+            $engine = HordeString::ucfirst(basename($engine));
         }
-
-        $class = 'Horde_Text_Diff_Engine_' . $engine;
+        $class = 'Horde\\Text\\Diff\\Engine\\' . $engine . 'Engine';
         $diff_engine = new $class();
 
         $this->_edits = call_user_func_array([$diff_engine, 'diff'], $params);
@@ -64,8 +69,8 @@ class Horde_Text_Diff
     {
         $count = 0;
         foreach ($this->_edits as $edit) {
-            if ($edit instanceof Horde_Text_Diff_Op_Add ||
-                $edit instanceof Horde_Text_Diff_Op_Change) {
+            if ($edit instanceof Op\Add ||
+                $edit instanceof Op\Change) {
                 $count += $edit->nfinal();
             }
         }
@@ -81,8 +86,8 @@ class Horde_Text_Diff
     {
         $count = 0;
         foreach ($this->_edits as $edit) {
-            if ($edit instanceof Horde_Text_Diff_Op_Delete ||
-                $edit instanceof Horde_Text_Diff_Op_Change) {
+            if ($edit instanceof Op\Delete ||
+                $edit instanceof Op\Change) {
                 $count += $edit->norig();
             }
         }
@@ -98,12 +103,12 @@ class Horde_Text_Diff
      * $rev = $diff->reverse();
      * </code>
      *
-     * @return Horde_Text_Diff  A Diff object representing the inverse of the
+     * @return Diff  A Diff object representing the inverse of the
      *                    original diff.  Note that we purposely don't return a
      *                    reference here, since this essentially is a clone()
      *                    method.
      */
-    public function reverse(): Horde_Text_Diff
+    public function reverse(): Diff
     {
         if (version_compare(zend_version(), '2', '>')) {
             $rev = clone($this);
@@ -125,7 +130,7 @@ class Horde_Text_Diff
     public function isEmpty(): bool
     {
         foreach ($this->_edits as $edit) {
-            if (!($edit instanceof Horde_Text_Diff_Op_Copy)) {
+            if (!($edit instanceof Op\Copy)) {
                 return false;
             }
         }
@@ -143,7 +148,7 @@ class Horde_Text_Diff
     {
         $lcs = 0;
         foreach ($this->_edits as $edit) {
-            if ($edit instanceof Horde_Text_Diff_Op_Copy) {
+            if ($edit instanceof Op\Copy) {
                 $lcs += count($edit->orig);
             }
         }
@@ -190,8 +195,8 @@ class Horde_Text_Diff
      * Removes trailing newlines from a line of text. This is meant to be used
      * with array_walk().
      *
-     * @param string $line  The line to trim.
-     * @param int $key  The index of the line in the array. Not used.
+     * @param string $line The line to trim.
+     * @param int $key The index of the line in the array. Not used.
      */
     public static function trimNewlines(string &$line, int $key): void
     {
@@ -205,24 +210,24 @@ class Horde_Text_Diff
      */
     protected function _check($from_lines, $to_lines): bool
     {
-        if (serialize($from_lines) != serialize($this->getOriginal())) {
+        if (serialize($from_lines) !== serialize($this->getOriginal())) {
             trigger_error("Reconstructed original doesn't match", E_USER_ERROR);
         }
-        if (serialize($to_lines) != serialize($this->getFinal())) {
+        if (serialize($to_lines) !== serialize($this->getFinal())) {
             trigger_error("Reconstructed final doesn't match", E_USER_ERROR);
         }
 
         $rev = $this->reverse();
-        if (serialize($to_lines) != serialize($rev->getOriginal())) {
+        if (serialize($to_lines) !== serialize($rev->getOriginal())) {
             trigger_error("Reversed original doesn't match", E_USER_ERROR);
         }
-        if (serialize($from_lines) != serialize($rev->getFinal())) {
+        if (serialize($from_lines) !== serialize($rev->getFinal())) {
             trigger_error("Reversed final doesn't match", E_USER_ERROR);
         }
 
         $prevtype = null;
         foreach ($this->_edits as $edit) {
-            if ($prevtype == get_class($edit)) {
+            if ($prevtype === get_class($edit)) {
                 trigger_error("Edit sequence is non-optimal", E_USER_ERROR);
             }
             $prevtype = get_class($edit);

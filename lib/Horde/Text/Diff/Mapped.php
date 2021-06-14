@@ -1,15 +1,8 @@
 <?php
-/**
- * Copyright 2007-2017 Horde LLC (http://www.horde.org/)
- *
- * See the enclosed file LICENSE for license information (LGPL). If you did
- * not receive this file, see http://www.horde.org/licenses/lgpl21.
- *
- * @author   Geoffrey T. Dairiki <dairiki@dairiki.org>
- * @category Horde
- * @license  http://www.horde.org/licenses/lgpl21 LGPL-2.1
- * @package  Text_Diff
- */
+
+namespace Horde\Text\Diff;
+
+use Horde\Text\Diff;
 
 /**
  * This can be used to compute things like case-insensitve diffs, or diffs
@@ -21,7 +14,7 @@
  * @license   http://www.horde.org/licenses/lgpl21 LGPL-2.1
  * @package   Text_Diff
  */
-class Horde_Text_Diff_Mapped extends Horde_Text_Diff
+class Mapped extends Diff
 {
     /**
      * Computes a diff between sequences of strings.

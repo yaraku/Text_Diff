@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Horde\Text\Diff;
 
-use Horde_Text_Diff;
-use Horde_Text_Diff_Exception;
+use Horde\Text\Diff;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,13 +27,13 @@ class EngineTest extends TestCase
             2 => file(__DIR__ . '/fixtures/2.txt')];
     }
 
-    protected function _testDiff(Horde_Text_Diff $diff): void
+    protected function _testDiff(Diff $diff): void
     {
         $edits = $diff->getDiff();
         self::assertCount(3, $edits);
-        self::assertInstanceOf('Horde_Text_Diff_Op_Copy', $edits[0]);
-        self::assertInstanceOf('Horde_Text_Diff_Op_Change', $edits[1]);
-        self::assertInstanceOf('Horde_Text_Diff_Op_Copy', $edits[2]);
+        self::assertInstanceOf(Diff\Op\Copy::class, $edits[0]);
+        self::assertInstanceOf(Diff\Op\Change::class, $edits[1]);
+        self::assertInstanceOf(Diff\Op\Copy::class, $edits[2]);
         self::assertEquals('This line is the same.', $edits[0]->orig[0]);
         self::assertEquals('This line is the same.', $edits[0]->final[0]);
         self::assertEquals('This line is different in 1.txt', $edits[1]->orig[0]);
@@ -45,31 +44,31 @@ class EngineTest extends TestCase
 
     public function testNativeEngine(): void
     {
-        $diff = new Horde_Text_Diff('Native', [$this->_lines[1], $this->_lines[2]]);
+        $diff = new Diff('Native', [$this->_lines[1], $this->_lines[2]]);
         $this->_testDiff($diff);
     }
 
     public function testStringEngine(): void
     {
         $patch = file_get_contents(__DIR__ . '/fixtures/unified.patch');
-        $diff = new Horde_Text_Diff('String', [$patch]);
+        $diff = new Diff('String', [$patch]);
         $this->_testDiff($diff);
 
         $patch = file_get_contents(__DIR__ . '/fixtures/unified2.patch');
         try {
-            $diff = new Horde_Text_Diff('String', [$patch]);
+            $diff = new Diff('String', [$patch]);
             self::fail('Horde_Text_Diff_Exception expected');
-        } catch (Horde_Text_Diff_Exception $e) {
+        } catch (DiffException $e) {
         }
-        $diff = new Horde_Text_Diff('String', [$patch, 'unified']);
+        $diff = new Diff('String', [$patch, 'unified']);
         $edits = $diff->getDiff();
         self::assertCount(1, $edits);
-        self::assertInstanceOf('Horde_Text_Diff_Op_Change', $edits[0]);
+        self::assertInstanceOf(Diff\Op\Change::class, $edits[0]);
         self::assertEquals('For the first time in U.S. history number of private contractors and troops are equal', $edits[0]->orig[0]);
         self::assertEquals('Number of private contractors and troops are equal for first time in U.S. history', $edits[0]->final[0]);
 
         $patch = file_get_contents(__DIR__ . '/fixtures/context.patch');
-        $diff = new Horde_Text_Diff('String', [$patch]);
+        $diff = new Diff('String', [$patch]);
         $this->_testDiff($diff);
     }
 
@@ -78,9 +77,9 @@ class EngineTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         try {
-            $diff = new Horde_Text_Diff('Xdiff', [$this->_lines[1], $this->_lines[2]]);
+            $diff = new Diff('Xdiff', [$this->_lines[1], $this->_lines[2]]);
             $this->_testDiff($diff);
-        } catch (Horde_Text_Diff_Exception $e) {
+        } catch (DiffException $e) {
             if (extension_loaded('xdiff')) {
                 throw $e;
             }

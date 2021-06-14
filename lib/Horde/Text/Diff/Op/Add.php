@@ -1,4 +1,7 @@
 <?php
+
+namespace Horde\Text\Diff\Op;
+
 /**
  * The original PHP version of this code was written by Geoffrey T. Dairiki
  * <dairiki@dairiki.org>, and is used/adapted with his permission.
@@ -12,7 +15,7 @@
  * @package Text_Diff
  * @author  Geoffrey T. Dairiki <dairiki@dairiki.org>
  */
-class Horde_Text_Diff_Op_Add extends Horde_Text_Diff_Op_Base
+class Add extends Base
 {
     public function __construct($lines)
     {
@@ -20,8 +23,8 @@ class Horde_Text_Diff_Op_Add extends Horde_Text_Diff_Op_Base
         $this->orig = false;
     }
 
-    public function reverse(): Horde_Text_Diff_Op_Delete
+    public function reverse(): Delete
     {
-        return new Horde_Text_Diff_Op_Delete($this->final);
+        return new Delete($this->final);
     }
 }

@@ -1,4 +1,7 @@
 <?php
+
+namespace Horde\Text\Diff\ThreeWay\Op;
+
 /**
  * Copyright 2007-2017 Horde LLC (http://www.horde.org/)
  *
@@ -8,7 +11,7 @@
  * @package Text_Diff
  * @author  Geoffrey T. Dairiki <dairiki@dairiki.org>
  */
-class Horde_Text_Diff_ThreeWay_Op_Base
+class Base
 {
     /**
      * @var array|false|mixed

@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Text\Diff\Engine;
+
+use Horde\Text\Diff;
+
 /**
  * Class used internally by Horde_Text_Diff to actually compute the diffs.
  *
@@ -26,12 +31,12 @@
  * @author  Geoffrey T. Dairiki <dairiki@dairiki.org>
  * @package Text_Diff
  */
-class Horde_Text_Diff_Engine_Native
+class NativeEngine
 {
     public function diff($from_lines, $to_lines): array
     {
-        array_walk($from_lines, ['Horde_Text_Diff', 'trimNewlines']);
-        array_walk($to_lines, ['Horde_Text_Diff', 'trimNewlines']);
+        array_walk($from_lines, [Diff::class, 'trimNewlines']);
+        array_walk($to_lines, [Diff::class, 'trimNewlines']);
 
         $n_from = count($from_lines);
         $n_to = count($to_lines);
@@ -50,7 +55,8 @@ class Horde_Text_Diff_Engine_Native
         }
 
         // Skip trailing common lines.
-        $xi = $n_from; $yi = $n_to;
+        $xi = $n_from;
+        $yi = $n_to;
         for ($endskip = 0; --$xi > $skip && --$yi > $skip; $endskip++) {
             if ($from_lines[$xi] !== $to_lines[$yi]) {
                 break;
@@ -102,7 +108,7 @@ class Horde_Text_Diff_Engine_Native
                 ++$yi;
             }
             if ($copy) {
-                $edits[] = new Horde_Text_Diff_Op_Copy($copy);
+                $edits[] = new Diff\Op\Copy($copy);
             }
 
             // Find deletes & adds.
@@ -117,11 +123,11 @@ class Horde_Text_Diff_Engine_Native
             }
 
             if ($delete && $add) {
-                $edits[] = new Horde_Text_Diff_Op_Change($delete, $add);
+                $edits[] = new Diff\Op\Change($delete, $add);
             } elseif ($delete) {
-                $edits[] = new Horde_Text_Diff_Op_Delete($delete);
+                $edits[] = new Diff\Op\Delete($delete);
             } elseif ($add) {
-                $edits[] = new Horde_Text_Diff_Op_Add($add);
+                $edits[] = new Diff\Op\Add($add);
             }
         }
 
@@ -144,7 +150,7 @@ class Horde_Text_Diff_Engine_Native
      * match.  The caller must trim matching lines from the beginning and end
      * of the portions it is going to specify.
      */
-    protected function _diag ($xoff, $xlim, $yoff, $ylim, $nchunks): array
+    protected function _diag($xoff, $xlim, $yoff, $ylim, $nchunks): array
     {
         $flip = false;
 
@@ -254,7 +260,7 @@ class Horde_Text_Diff_Engine_Native
      * Note that XLIM, YLIM are exclusive bounds.  All line numbers are
      * origin-0 and discarded lines are not counted.
      */
-    protected function _compareseq ($xoff, $xlim, $yoff, $ylim): void
+    protected function _compareseq($xoff, $xlim, $yoff, $ylim): void
     {
         /* Slide down the bottom initial diagonal. */
         while ($xoff < $xlim && $yoff < $ylim
@@ -295,7 +301,7 @@ class Horde_Text_Diff_Engine_Native
             reset($seps);
             $pt1 = $seps[0];
             while ($pt2 = next($seps)) {
-                $this->_compareseq ($pt1[0], $pt2[0], $pt1[1], $pt2[1]);
+                $this->_compareseq($pt1[0], $pt2[0], $pt1[1], $pt2[1]);
                 $pt1 = $pt2;
             }
         }
@@ -340,7 +346,8 @@ class Horde_Text_Diff_Engine_Native
 
             while ($i < $len && ! $changed[$i]) {
                 assert($j < $other_len && ! $other_changed[$j]);
-                $i++; $j++;
+                $i++;
+                $j++;
                 while ($j < $other_len && $other_changed[$j]) {
                     $j++;
                 }

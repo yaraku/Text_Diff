@@ -1,4 +1,7 @@
 <?php
+
+namespace Horde\Translation;
+
 /**
  * @package Translation
  *
@@ -15,7 +18,7 @@
  * @author  Jan Schneider <jan@horde.org>
  * @package Translation
  */
-interface Horde_Translation_Handler
+interface Handler
 {
     /**
      * Returns the translation of a message.
@@ -32,7 +35,7 @@ interface Horde_Translation_Handler
      *
      * @param string $singular  The singular version to translate.
      * @param string $plural    The plural version to translate.
-     * @param integer $number   The number that determines singular vs. plural.
+     * @param int $number   The number that determines singular vs. plural.
      *
      * @return string  The string translation, or the original string if no
      *                 translation exists.

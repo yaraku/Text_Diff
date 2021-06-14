@@ -16,7 +16,7 @@ namespace Horde;
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Util
  */
-class Util
+class HordeUtil
 {
     /**
      * A list of random patterns to use for overwriting purposes.

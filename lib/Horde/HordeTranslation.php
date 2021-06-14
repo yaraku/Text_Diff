@@ -1,4 +1,10 @@
 <?php
+
+namespace Horde;
+
+use Horde\Translation\Handler;
+use Horde\Translation\TranslationException;
+
 /**
  * Copyright 2010-2014 Horde LLC (http://www.horde.org/)
  *
@@ -22,7 +28,7 @@
  * @license   http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package   Translation
  */
-abstract class Horde_Translation
+abstract class HordeTranslation
 {
     /**
      * The translation domain, e.g. the library name, for the default gettext
@@ -30,7 +36,7 @@ abstract class Horde_Translation
      *
      * @var string
      */
-    static protected $_domain;
+    protected static $_domain;
 
     /**
      * The relative path to the translations for the default gettext handler.
@@ -39,14 +45,14 @@ abstract class Horde_Translation
      *
      * @var string
      */
-    static protected $_directory;
+    protected static $_directory;
 
     /**
      * The handlers providing the actual translations.
      *
      * @var array
      */
-    static protected $_handlers = array();
+    protected static $_handlers = [];
 
     /**
      * Loads a translation handler class pointing to the library's translations
@@ -55,10 +61,10 @@ abstract class Horde_Translation
      * @param string $handlerClass  The name of a class implementing the
      *                              Horde_Translation_Handler interface.
      */
-    static public function loadHandler($handlerClass)
+    public static function loadHandler($handlerClass)
     {
         if (!self::$_domain || !self::$_directory) {
-            throw new Horde_Translation_Exception('The domain and directory properties must be set by the class that extends Horde_Translation.');
+            throw new TranslationException('The domain and directory properties must be set by the class that extends Horde_Translation.');
         }
         self::setHandler(self::$_domain, new $handlerClass(self::$_domain, self::$_directory));
     }
@@ -72,11 +78,11 @@ abstract class Horde_Translation
      * interface.
      *
      * @param string $domain                      The translation domain.
-     * @param Horde_Translation_Handler $handler  An object implementing the
+     * @param Handler $handler  An object implementing the
      *                                            Horde_Translation_Handler
      *                                            interface.
      */
-    static public function setHandler($domain, $handler)
+    public static function setHandler($domain, $handler)
     {
         self::$_handlers[$domain] = $handler;
     }
@@ -89,7 +95,7 @@ abstract class Horde_Translation
      * @return string  The string translation, or the original string if no
      *                 translation exists.
      */
-    static public function t($message)
+    public static function t($message)
     {
         if (!isset(self::$_handlers[self::$_domain])) {
             self::loadHandler('Horde_Translation_Handler_Gettext');
@@ -102,12 +108,12 @@ abstract class Horde_Translation
      *
      * @param string $singular  The singular version to translate.
      * @param string $plural    The plural version to translate.
-     * @param integer $number   The number that determines singular vs. plural.
+     * @param int $number   The number that determines singular vs. plural.
      *
      * @return string  The string translation, or the original string if no
      *                 translation exists.
      */
-    static public function ngettext($singular, $plural, $number)
+    public static function ngettext($singular, $plural, $number)
     {
         if (!isset(self::$_handlers[self::$_domain])) {
             self::loadHandler('Horde_Translation_Handler_Gettext');
@@ -126,9 +132,8 @@ abstract class Horde_Translation
      *
      * @return string  The raw string.
      */
-    static public function r($message)
+    public static function r($message)
     {
         return $message;
     }
-
 }

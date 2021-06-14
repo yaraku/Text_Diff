@@ -1,4 +1,14 @@
 <?php
+
+namespace Horde;
+
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use DOMXPath;
+use Exception;
+use Iterator;
+
 /**
  * Copyright 2010-2013 Horde LLC (http://www.horde.org/)
  *
@@ -20,7 +30,7 @@
  * @package   Util
  * @license   http://www.horde.org/licenses/lgpl21 LGPL 2.1
  */
-class Horde_Domhtml implements Iterator
+class HordeDomHtml implements Iterator
 {
     /**
      * DOM object.
@@ -56,12 +66,12 @@ class Horde_Domhtml implements Iterator
      * @param string $text     The text of the HTML document.
      * @param string $charset  The charset of the HTML document.
      *
-     * @throws Exception
+     * @throws HordeException
      */
     public function __construct($text, $charset = null)
     {
         if (!extension_loaded('dom')) {
-            throw new Exception('DOM extension is not available.');
+            throw new HordeException('DOM extension is not available.');
         }
 
         // Bug #9616: Make sure we have valid HTML input.
@@ -81,15 +91,15 @@ class Horde_Domhtml implements Iterator
                 : 'iso-8859-1';
         } else {
             /* Convert/try with UTF-8 first. */
-            $this->_origCharset = Horde_String::lower($charset);
+            $this->_origCharset = HordeString::lower($charset);
             $this->_xmlencoding = '<?xml encoding="UTF-8"?>';
-            $doc->loadHTML($this->_xmlencoding . Horde_String::convertCharset($text, $charset, 'UTF-8'));
+            $doc->loadHTML($this->_xmlencoding . HordeString::convertCharset($text, $charset, 'UTF-8'));
 
             if ($doc->encoding &&
-                (Horde_String::lower($doc->encoding) != 'utf-8')) {
+                (HordeString::lower($doc->encoding) != 'utf-8')) {
                 /* Convert charset to what the HTML document says it SHOULD
                  * be. */
-                $doc->loadHTML(Horde_String::convertCharset($text, $charset, $doc->encoding));
+                $doc->loadHTML(HordeString::convertCharset($text, $charset, $doc->encoding));
                 $this->_xmlencoding = '';
             }
         }
@@ -163,7 +173,7 @@ class Horde_Domhtml implements Iterator
      *
      * @return string  HTML text.
      */
-    public function returnHtml(array $opts = array())
+    public function returnHtml(array $opts = [])
     {
         $curr_charset = $this->getCharset();
         if (strcasecmp($curr_charset, 'US-ASCII') === 0) {
@@ -195,7 +205,7 @@ class Horde_Domhtml implements Iterator
         }
 
         if (strcasecmp($curr_charset, $charset) !== 0) {
-            $text = Horde_String::convertCharset($text, $curr_charset, $charset);
+            $text = HordeString::convertCharset($text, $curr_charset, $charset);
         }
 
         if (!$this->_xmlencoding ||
@@ -222,7 +232,7 @@ class Horde_Domhtml implements Iterator
             }
         }
 
-        return Horde_String::convertCharset($text, 'UTF-8', $this->_origCharset);
+        return HordeString::convertCharset($text, 'UTF-8', $this->_origCharset);
     }
 
     /**
@@ -269,8 +279,8 @@ class Horde_Domhtml implements Iterator
          * w/removeChild() may exit iteration after removal is complete. */
 
         if ($this->_iterator instanceof DOMDocument) {
-            $this->_iterator = array();
-            $curr = array();
+            $this->_iterator = [];
+            $curr = [];
             $node = $this->dom;
         } elseif (empty($this->_iterator)) {
             $this->_iterator = null;
@@ -284,11 +294,11 @@ class Horde_Domhtml implements Iterator
             ($node instanceof DOMNode) &&
             $node->hasChildNodes()) {
             $curr['child'] = true;
-            $this->_iterator[] = array(
+            $this->_iterator[] = [
                 'child' => false,
                 'i' => $node->childNodes->length - 1,
                 'list' => $node->childNodes
-            );
+            ];
         } elseif (--$curr['i'] < 0) {
             array_pop($this->_iterator);
             $this->next();
@@ -310,5 +320,4 @@ class Horde_Domhtml implements Iterator
     {
         return !is_null($this->_iterator);
     }
-
 }

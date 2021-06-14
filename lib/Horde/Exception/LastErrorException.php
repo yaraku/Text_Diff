@@ -1,4 +1,9 @@
 <?php
+
+namespace Horde\Exception;
+
+use Horde\HordeException;
+
 /**
  * Horde exception class that accepts output of error_get_last() as $code and
  * mask itself as that error.
@@ -11,7 +16,7 @@
  * @category Horde
  * @package  Exception
  */
-class Horde_Exception_LastError extends Horde_Exception
+class LastErrorException extends HordeException
 {
     /**
      * Exception constructor
@@ -41,5 +46,4 @@ class Horde_Exception_LastError extends Horde_Exception
             parent::__construct($message, $code_or_lasterror);
         }
     }
-
 }
