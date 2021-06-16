@@ -2,7 +2,7 @@
 
 namespace Horde\Text\Diff\ThreeWay;
 
-use Horde\Text\HordeDiff;
+use Horde\Text\Diff\ThreeWay;
 
 /**
  * Copyright 2007-2017 Horde LLC (http://www.horde.org/)
@@ -46,12 +46,12 @@ class BlockBuilder
         return !$this->orig && !$this->final1 && !$this->final2;
     }
 
-    public function finish(): bool|Diff\ThreeWay\Op\Base
+    public function finish(): bool|ThreeWay\Op\Base
     {
         if ($this->isEmpty()) {
             return false;
         } else {
-            $edit = new Diff\ThreeWay\Op\Base($this->orig, $this->final1, $this->final2);
+            $edit = new ThreeWay\Op\Base($this->orig, $this->final1, $this->final2);
             $this->_init();
             return $edit;
         }

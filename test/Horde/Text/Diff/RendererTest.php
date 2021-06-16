@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Horde\Text\Diff;
 
+use Horde\Text\Diff;
 use Horde\Text\HordeDiff;
 use PHPUnit\Framework\TestCase;
 

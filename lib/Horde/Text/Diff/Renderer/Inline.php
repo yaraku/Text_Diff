@@ -2,6 +2,7 @@
 
 namespace Horde\Text\Diff\Renderer;
 
+use Horde\Text\Diff;
 use Horde\Text\HordeDiff;
 
 /**
