@@ -2,7 +2,7 @@
 
 namespace Horde\Text\Diff\Engine;
 
-use Horde\Text\Diff;
+use Horde\Text\HordeDiff;
 
 /**
  * Class used internally by Horde_Text_Diff to actually compute the diffs.
@@ -35,8 +35,8 @@ class NativeEngine
 {
     public function diff($from_lines, $to_lines): array
     {
-        array_walk($from_lines, [Diff::class, 'trimNewlines']);
-        array_walk($to_lines, [Diff::class, 'trimNewlines']);
+        array_walk($from_lines, [HordeDiff::class, 'trimNewlines']);
+        array_walk($to_lines, [HordeDiff::class, 'trimNewlines']);
 
         $n_from = count($from_lines);
         $n_to = count($to_lines);

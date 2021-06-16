@@ -2,7 +2,7 @@
 
 namespace Horde\Text\Diff;
 
-use Horde\Text\Diff;
+use Horde\Text\HordeDiff;
 
 /**
  * This can be used to compute things like case-insensitve diffs, or diffs
@@ -14,7 +14,7 @@ use Horde\Text\Diff;
  * @license   http://www.horde.org/licenses/lgpl21 LGPL-2.1
  * @package   Text_Diff
  */
-class Mapped extends Diff
+class Mapped extends HordeDiff
 {
     /**
      * Computes a diff between sequences of strings.

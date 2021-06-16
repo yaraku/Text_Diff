@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Horde\Text\Diff;
 
-use Horde\Text\Diff;
+use Horde\Text\HordeDiff;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,7 +27,7 @@ class EngineTest extends TestCase
             2 => file(__DIR__ . '/fixtures/2.txt')];
     }
 
-    protected function _testDiff(Diff $diff): void
+    protected function _testDiff(HordeDiff $diff): void
     {
         $edits = $diff->getDiff();
         self::assertCount(3, $edits);
@@ -44,23 +44,23 @@ class EngineTest extends TestCase
 
     public function testNativeEngine(): void
     {
-        $diff = new Diff('Native', [$this->_lines[1], $this->_lines[2]]);
+        $diff = new HordeDiff('Native', [$this->_lines[1], $this->_lines[2]]);
         $this->_testDiff($diff);
     }
 
     public function testStringEngine(): void
     {
         $patch = file_get_contents(__DIR__ . '/fixtures/unified.patch');
-        $diff = new Diff('String', [$patch]);
+        $diff = new HordeDiff('String', [$patch]);
         $this->_testDiff($diff);
 
         $patch = file_get_contents(__DIR__ . '/fixtures/unified2.patch');
         try {
-            $diff = new Diff('String', [$patch]);
+            $diff = new HordeDiff('String', [$patch]);
             self::fail('Horde_Text_Diff_Exception expected');
         } catch (DiffException $e) {
         }
-        $diff = new Diff('String', [$patch, 'unified']);
+        $diff = new HordeDiff('String', [$patch, 'unified']);
         $edits = $diff->getDiff();
         self::assertCount(1, $edits);
         self::assertInstanceOf(Diff\Op\Change::class, $edits[0]);
@@ -68,7 +68,7 @@ class EngineTest extends TestCase
         self::assertEquals('Number of private contractors and troops are equal for first time in U.S. history', $edits[0]->final[0]);
 
         $patch = file_get_contents(__DIR__ . '/fixtures/context.patch');
-        $diff = new Diff('String', [$patch]);
+        $diff = new HordeDiff('String', [$patch]);
         $this->_testDiff($diff);
     }
 
@@ -77,7 +77,7 @@ class EngineTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         try {
-            $diff = new Diff('Xdiff', [$this->_lines[1], $this->_lines[2]]);
+            $diff = new HordeDiff('Xdiff', [$this->_lines[1], $this->_lines[2]]);
             $this->_testDiff($diff);
         } catch (DiffException $e) {
             if (extension_loaded('xdiff')) {

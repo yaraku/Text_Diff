@@ -2,7 +2,7 @@
 
 namespace Horde\Text\Diff;
 
-use Horde\Text\Diff;
+use Horde\Text\HordeDiff;
 
 /**
  * A class to render Diffs in different formats.
@@ -65,7 +65,7 @@ class Renderer
         return $params;
     }
 
-    public function render(Diff $diff): string
+    public function render(HordeDiff $diff): string
     {
         $xi = $yi = 1;
         $block = false;

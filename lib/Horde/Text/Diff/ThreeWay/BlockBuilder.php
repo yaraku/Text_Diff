@@ -2,7 +2,7 @@
 
 namespace Horde\Text\Diff\ThreeWay;
 
-use Horde\Text\Diff;
+use Horde\Text\HordeDiff;
 
 /**
  * Copyright 2007-2017 Horde LLC (http://www.horde.org/)

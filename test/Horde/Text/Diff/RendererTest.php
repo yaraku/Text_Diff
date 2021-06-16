@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Horde\Text\Diff;
 
-use Horde\Text\Diff;
+use Horde\Text\HordeDiff;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,7 +31,7 @@ class RendererTest extends TestCase
     {
         $renderer = new Diff\Renderer\Context();
 
-        $diff = new Diff('Native', [$this->_lines[1], $this->_lines[2]]);
+        $diff = new HordeDiff('Native', [$this->_lines[1], $this->_lines[2]]);
         $patch = <<<END_OF_PATCH
 ***************
 *** 1,3 ****
@@ -46,7 +46,7 @@ class RendererTest extends TestCase
 END_OF_PATCH;
         self::assertEquals($patch, $renderer->render($diff));
 
-        $diff = new Diff('Native', [$this->_lines[5], $this->_lines[6]]);
+        $diff = new HordeDiff('Native', [$this->_lines[5], $this->_lines[6]]);
         $patch = <<<END_OF_PATCH
 ***************
 *** 1,5 ****
@@ -70,7 +70,7 @@ END_OF_PATCH;
 
     public function testInlineRenderer(): void
     {
-        $diff = new Diff('Native', [$this->_lines[1], $this->_lines[2]]);
+        $diff = new HordeDiff('Native', [$this->_lines[1], $this->_lines[2]]);
 
         $renderer = new Diff\Renderer\Inline(['split_characters' => true]);
         $patch = <<<END_OF_PATCH
@@ -90,7 +90,7 @@ This line is the same.
 END_OF_PATCH;
         self::assertEquals($patch, $renderer->render($diff));
 
-        $diff = new Diff('Native', [$this->_lines[7], $this->_lines[8]]);
+        $diff = new HordeDiff('Native', [$this->_lines[7], $this->_lines[8]]);
         $patch = <<<END_OF_PATCH
 This is a test.
 Adding random text to simulate files.
@@ -108,7 +108,7 @@ END_OF_PATCH;
     {
         $renderer = new Diff\Renderer\Unified();
 
-        $diff = new Diff('Native', [$this->_lines[1], $this->_lines[2]]);
+        $diff = new HordeDiff('Native', [$this->_lines[1], $this->_lines[2]]);
         $patch = <<<END_OF_PATCH
 @@ -1,3 +1,3 @@
  This line is the same.
@@ -119,7 +119,7 @@ END_OF_PATCH;
 END_OF_PATCH;
         self::assertEquals($patch, $renderer->render($diff));
 
-        $diff = new Diff('Native', [$this->_lines[5], $this->_lines[6]]);
+        $diff = new HordeDiff('Native', [$this->_lines[5], $this->_lines[6]]);
         $patch = <<<END_OF_PATCH
 @@ -1,5 +1,7 @@
  This is a test.
@@ -152,7 +152,7 @@ Bon appetit!
 
 END_OF_PATCH;
 
-        $diff = new Diff('Native', $test);
+        $diff = new HordeDiff('Native', $test);
         $renderer = new Diff\Renderer\Inline();
         self::assertEquals($patch, $renderer->render($diff));
     }
@@ -170,7 +170,7 @@ This line is different in <del>1.txt</del><ins>2.txt</ins>
 
 END_OF_PATCH;
 
-        $diff = new Diff('Native', $test);
+        $diff = new HordeDiff('Native', $test);
         $renderer = new Diff\Renderer\Inline();
         self::assertEquals($patch, $renderer->render($diff));
     }
@@ -201,7 +201,7 @@ EOT;
         $patch = "@@ -1,5 +1,5 @@\n \n-Original Text\n+Modified Text\n \n \n \n";
 
         $test = [explode("\n", $oldtext), explode("\n", $newtext)];
-        $diff = new Diff('Native', $test);
+        $diff = new HordeDiff('Native', $test);
         $renderer = new Diff\Renderer\Unified(['leading_context_lines' => 3, 'trailing_context_lines' => 3]);
         self::assertEquals($patch, $renderer->render($diff));
     }
@@ -217,7 +217,7 @@ Another line
 
 END_OF_PATCH;
 
-        $diff = new Diff('Native', $test);
+        $diff = new HordeDiff('Native', $test);
         $renderer = new Diff\Renderer\Inline();
         self::assertEquals($patch, $renderer->render($diff));
     }
@@ -269,7 +269,7 @@ EOT;
 END_OF_PATCH;
 
         $test = [explode("\n", $oldtext), explode("\n", $newtext)];
-        $diff = new Diff('Native', $test);
+        $diff = new HordeDiff('Native', $test);
         $renderer = new Renderer();
         self::assertEquals($patch, $renderer->render($diff));
     }
@@ -295,7 +295,7 @@ QQ;
 <li>Increase access to mass transit systems</li>
 QQ;
 
-        $diff = new Diff('Native', [explode("\n", $b), explode("\n", $a)]);
+        $diff = new HordeDiff('Native', [explode("\n", $b), explode("\n", $a)]);
         $renderer = new Diff\Renderer\Inline();
         $renderer->render($diff);
     }
@@ -317,7 +317,7 @@ Two<ins>s</ins>
 
 EOPATCH;
 
-        $diff = new Diff('Native', [explode("\n", $a), explode("\n", $b)]);
+        $diff = new HordeDiff('Native', [explode("\n", $a), explode("\n", $b)]);
         $renderer = new Diff\Renderer\Inline(['split_characters' => true]);
         self::assertEquals($patch, $renderer->render($diff));
     }

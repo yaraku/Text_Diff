@@ -21,7 +21,7 @@ use Horde\Text\Diff\Op;
  * @package Text_Diff
  * @author  Geoffrey T. Dairiki <dairiki@dairiki.org>
  */
-class Diff
+class HordeDiff
 {
     /**
      * Array of changes.
@@ -103,12 +103,12 @@ class Diff
      * $rev = $diff->reverse();
      * </code>
      *
-     * @return Diff  A Diff object representing the inverse of the
+     * @return HordeDiff  A Diff object representing the inverse of the
      *                    original diff.  Note that we purposely don't return a
      *                    reference here, since this essentially is a clone()
      *                    method.
      */
-    public function reverse(): Diff
+    public function reverse(): HordeDiff
     {
         if (version_compare(zend_version(), '2', '>')) {
             $rev = clone($this);

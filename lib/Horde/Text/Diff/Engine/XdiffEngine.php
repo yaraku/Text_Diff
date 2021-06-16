@@ -30,8 +30,8 @@ class XdiffEngine
             throw new DiffException('The xdiff extension is required for this diff engine');
         }
 
-        array_walk($from_lines, ['Horde\Text\Diff', 'trimNewlines']);
-        array_walk($to_lines, ['Horde\Text\Diff', 'trimNewlines']);
+        array_walk($from_lines, ['Horde\Text\HordeDiff', 'trimNewlines']);
+        array_walk($to_lines, ['Horde\Text\HordeDiff', 'trimNewlines']);
 
         /* Convert the two input arrays into strings for xdiff processing. */
         $from_string = implode("\n", $from_lines);
